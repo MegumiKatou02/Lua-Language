@@ -9,6 +9,8 @@ local des = [[
     fullName
 ]]
 
+print(des)
+
 C = 20
 local a = 10
 print(C, a)
