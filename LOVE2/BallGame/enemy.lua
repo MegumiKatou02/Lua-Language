@@ -40,7 +40,12 @@ function Enemy()
         end,
 
         draw = function (self)
-            love.graphics.setColor(1, 0.5, 7)
+            math.randomseed(os.time())
+            local x, y, z = math.random(0, 1), math.random(0, 1), math.random(0, 1)
+            if x == 0 and y == 0 and z == 0 then
+                x, y, z = 0, 1, 0
+            end
+            love.graphics.setColor(x, y, z)
 
             love.graphics.circle("fill", self.x, self.y, self.radius)
             love.graphics.setColor(1, 1, 1)

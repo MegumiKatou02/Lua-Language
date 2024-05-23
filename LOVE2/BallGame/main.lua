@@ -39,7 +39,7 @@ local function gameover()
         local x1, y1 = enemies[i].x, enemies[i].y
         local x2, y2 = love.mouse.getPosition()
         if distance(x1, y1, x2, y2) <= enemies[i].radius + player.radius then
-            -- os.exit() 
+            os.exit() 
         end
     end
 end
