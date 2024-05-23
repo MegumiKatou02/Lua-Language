@@ -30,6 +30,20 @@ local buttons = {
 
 local enemies = {}
 
+local function distance(x1, y1, x2, y2)
+    return math.sqrt((x1 - x2)^2 + (y1 - y2)^2)
+end
+
+local function gameover()
+    for i = 1, #enemies do
+        local x1, y1 = enemies[i].x, enemies[i].y
+        local x2, y2 = love.mouse.getPosition()
+        if distance(x1, y1, x2, y2) <= enemies[i].radius + player.radius then
+            -- os.exit() 
+        end
+    end
+end
+
 function love.load()
     love.window.setTitle("Ching's ball")
     love.mouse.setVisible(false)
@@ -40,6 +54,7 @@ function love.load()
 end
 
 function love.update(dt)
+    gameover()
     player.x, player.y = love.mouse.getPosition()
 
     for i = 1, #enemies do
