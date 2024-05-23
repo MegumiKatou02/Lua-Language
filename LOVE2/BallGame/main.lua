@@ -7,9 +7,9 @@ math.randomseed(os.time())
 local game = {
     difficulty = 1,
     state = {
-        menu = false,
+        menu = true,
         pause = false,
-        running = true,
+        running = false,
         ended = false
     }
 }
@@ -30,16 +30,37 @@ local buttons = {
 
 local enemies = {}
 
+local function StartNewGame()
+    game.state["menu"] = false
+    game.state["running"] = true
+
+    table.insert(enemies, 1, enemy())
+end
+
+function love.mousepressed(x, y, button, istouch, presses)
+    if not game.state["running"] then
+        if button == 1 then
+            if game.state["menu"] then
+                for index in pairs(buttons.menu_state) do
+                    buttons.menu_state[index]:checkPressed(x, y,  player.radius)
+                end
+            end
+        end
+    end
+end
+
 local function distance(x1, y1, x2, y2)
     return math.sqrt((x1 - x2)^2 + (y1 - y2)^2)
 end
 
 local function gameover()
-    for i = 1, #enemies do
-        local x1, y1 = enemies[i].x, enemies[i].y
-        local x2, y2 = love.mouse.getPosition()
-        if distance(x1, y1, x2, y2) <= enemies[i].radius + player.radius then
-            os.exit() 
+    if game.state["running"] then
+        for i = 1, #enemies do
+            local x1, y1 = enemies[i].x, enemies[i].y
+            local x2, y2 = love.mouse.getPosition()
+            if distance(x1, y1, x2, y2) <= enemies[i].radius + player.radius then
+                os.exit()
+            end
         end
     end
 end
@@ -48,18 +69,21 @@ function love.load()
     love.window.setTitle("Ching's ball")
     love.mouse.setVisible(false)
 
-    buttons.menu_state.play_game = button("Player game", nil, nil, 50, 50)
-
-    table.insert(enemies, 1, enemy())
+    buttons.menu_state.play_game = button("Player Game", StartNewGame, nil, 120, 40)
+    buttons.menu_state.settings = button("Settings", nil, nil, 120, 40)
+    buttons.menu_state.exit_game = button("Exit Game", love.event.quit, nil, 120, 40)
 end
 
 function love.update(dt)
     gameover()
     player.x, player.y = love.mouse.getPosition()
 
-    for i = 1, #enemies do
-        enemies[i]:move(player.x, player.y)
+    if game.state["running"] then
+        for i = 1, #enemies do
+            enemies[i]:move(player.x, player.y)
+        end
     end
+
     delta = delta + 1
     if(delta >= 100) then
         player.score = player.score + 1
@@ -67,7 +91,7 @@ function love.update(dt)
             table.insert(enemies, #enemies + 1, enemy())
             standardScore = standardScore + 15
             for i = 1, #enemies do
-                enemies[i].level = enemies[i].level + 0.5 
+                enemies[i].level = enemies[i].level + 0.5
             end
         end
         delta = 0
@@ -107,7 +131,9 @@ function love.draw()
 
         love.graphics.circle("fill", player.x, player.y, player.radius)
     elseif game.state["menu"] then
-        buttons.menu_state.play_game:draw(10, 20, 10, 20)
+        buttons.menu_state.play_game:draw(10, 20, 17, 10)
+        buttons.menu_state.settings:draw(10, 70, 17, 10)
+        buttons.menu_state.exit_game:draw(10, 120, 17, 10)
     end
 
     if not game.state["running"] then
