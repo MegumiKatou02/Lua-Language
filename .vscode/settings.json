@@ -1,9 +1,13 @@
 {
     "Lua.diagnostics.globals": [
         "mmath",
-        "love"
+        "love",
+        "destroy_ast",
+        "calculateDistance",
+        "player"
     ],
     "Lua.diagnostics.disable": [
         "duplicate-set-field"
     ]
+    
 }
