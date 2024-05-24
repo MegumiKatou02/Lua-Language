@@ -1,5 +1,6 @@
 ---@diagnostic disable: lowercase-global
 local love = require "love"
+local testP = require "Player"
 
 player = {}
 game = {}
@@ -22,6 +23,7 @@ function TinhGoc()
 end
 
 function love.load()
+    p = testP()
     player.x, player.y = 300, 300
     game.standardX, game.standardY = 300, 300
     player.vec = 3;
@@ -31,23 +33,24 @@ function love.load()
 end
 
 function PlayerMove()
-    if love.keyboard.isDown("d") then
-        player.x = player.x + player.vec
-    end
-    if love.keyboard.isDown("a") then
-        player.x = player.x - player.vec
-    end
-    if love.keyboard.isDown("w") then
-        player.y = player.y - player.vec
-    end
-    if love.keyboard.isDown("s") then
-        player.y = player.y + player.vec
-    end
+    -- if love.keyboard.isDown("d") then
+    --     player.x = player.x + player.vec
+    -- end
+    -- if love.keyboard.isDown("a") then
+    --     player.x = player.x - player.vec
+    -- end
+    -- if love.keyboard.isDown("w") then
+    --     player.y = player.y - player.vec
+    -- end
+    -- if love.keyboard.isDown("s") then
+    --     player.y = player.y + player.vec
+    -- end
 end
 
 function love.update(dt)
     PlayerMove()
-    TinhGoc()
+    p:movePlayer(dt)
+    -- TinhGoc()
     camera.x = player.x - love.graphics.getWidth() / 2
     camera.y = player.y - love.graphics.getHeight() / 2
 end
@@ -57,9 +60,10 @@ function love.draw()
     
     -- love.graphics.translate(-camera.x, -camera.y) -- 
     -- love.graphics.draw(game.background, 0, 0);
-    love.graphics.draw(player.skin, player.x, player.y, player.angle, 1, 1,
-        player.skin:getWidth()/2,
-        player.skin:getHeight()/2
-    )
+    -- love.graphics.draw(player.skin, player.x, player.y, player.angle, 1, 1,
+    --     player.skin:getWidth()/2,
+    --     player.skin:getHeight()/2
+    -- )
+    p:draw()
     -- love.graphics.pop()
 end
